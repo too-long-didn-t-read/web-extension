@@ -66,11 +66,15 @@ var options = {
       from: "src/manifest.json",
       transform: function (content, path) {
         // generates the manifest file using the package.json informations
-        return Buffer.from(JSON.stringify({
+        const additionalConfig = {
           description: process.env.npm_package_description,
           version: process.env.npm_package_version,
           ...JSON.parse(content.toString())
-        }))
+        }
+        if (process.env.NODE_ENV !== "production") {
+          additionalConfig.content_security_policy = "script-src 'self' 'unsafe-eval'; object-src 'self'"
+        }
+        return Buffer.from(JSON.stringify(additionalConfig))
       }
     }]),
     new HtmlWebpackPlugin({
