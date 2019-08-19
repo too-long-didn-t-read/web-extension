@@ -1,6 +1,6 @@
 import React from "react";
-import icon from "../../img/icon-128.png"
 import { hot } from "react-hot-loader";
+import VoteButton from "./vote_button";
 
 class Popup extends React.Component {
   constructor(props) {
@@ -8,8 +8,6 @@ class Popup extends React.Component {
     const browser = chrome || browser;
     browser.runtime.sendMessage({content: "get_current_tab_url"},
       (response) => {
-        console.log(response)
-          // document.getElementById("tab_name").innerHTML = response.domain;
           this.setState({
             url: response.domain,
             simplifieds : (response.domainInfo && response.domainInfo.simplifieds) ? response.domainInfo.simplifieds : []
@@ -17,8 +15,28 @@ class Popup extends React.Component {
       });
     this.state = {
       url: null,
-      simplifieds: []
+      simplifieds: [],
+      voted: null
     }
+  }
+
+  vote(type) {
+    // fetch(url, {
+    //   method: 'POST',
+    //   mode: 'cors',
+    //   cache: 'no-cache',
+    //   credentials: 'same-origin',
+    //   headers: {
+    //       'Content-Type': 'application/json',
+    //   },
+    //   redirect: 'follow',
+    //   referrer: 'no-referrer',
+    //   body: JSON.stringify({vote: type}),
+    // })
+    // .then(response => response.json());
+    this.setState({
+      voted: type
+    })
   }
   
   componentDidMount() {
@@ -27,20 +45,54 @@ class Popup extends React.Component {
 
   rendersimplifieds(simplifieds) {
     console.log(simplifieds)
-    return simplifieds.map(simplifield => {
+    return simplifieds.map((simplifield, index) => {
       return (
-        <li>{simplifield.name}</li>
+        <div key={index} className="overview simplifields-description-section">
+        <div className="d-flex">
+          <div className="simplifield-container">
+            <h6 class="simplifields-description-section-title">{simplifield.name}</h6>
+          </div>
+          <div className="vote-container">
+            <VoteButton
+              type='up'
+              vote={() => this.vote('up')}
+              voted={this.state.voted}
+              style={{display: 'inline'}}
+            />
+            <VoteButton
+              type='down'
+              vote={() => this.vote('down')}
+              voted={this.state.voted}
+              style={{display: 'inline'}}
+            />
+          </div>
+
+        </div>
+        </div>
       )
     })
   }
+
+
   render () {
     return (
       <div>
-        <h4>{this.state.url}</h4>
-        <h5>Simplifields</h5>
-        <ul>
-        {this.rendersimplifieds(this.state.simplifieds)}
-        </ul>
+        <div className="title-container">
+          <h4>{this.state.url}</h4>
+        </div>
+        {
+          this.state.simplifieds.length > 0 &&
+          (
+            <div>
+              <div class="simplifields-details-wrapper">
+                <h6 className="mt-2">Clauses</h6>
+                <div class="simplifields-details">
+                  {this.rendersimplifieds(this.state.simplifieds)}
+                </div>
+              </div>
+            </div>
+          )
+        }
       </div>
     )
   }

@@ -15,6 +15,13 @@ var iconsMapping = {
     2: red
 }
 
+// Initialize browser action badge style
+browser.browserAction.setBadgeBackgroundColor(
+    {
+        color: "#273745"
+    }
+)
+
 /**
  * intantiate a URL object from the passed string
  * @param  {string} url
@@ -29,7 +36,6 @@ function extractDomain(url) {
  * @param  {int} activeTab
  */
 function getDomainInfo(domain, activeTab) {
-    console.log('getting domain info for : ', domain)
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
     xhr.responseType = 'json';
@@ -85,11 +91,6 @@ function setBrowserActionIcon(color) {
             tabId: activeTab
         }
     )
-    browser.browserAction.setBadgeBackgroundColor(
-        {
-            color: "#FFFFFF"
-        }
-      )
 }
 
 
