@@ -1,17 +1,19 @@
 import React from "react";
 import { hot } from "react-hot-loader";
+import { Link } from "react-router-dom";
+
 import VoteButton from "./vote_button";
 
 class Popup extends React.Component {
   constructor(props) {
     super(props)
     const browser = chrome || browser;
-    browser.runtime.sendMessage({content: "get_current_tab_url"},
+    browser.runtime.sendMessage({ content: "get_current_tab_url" },
       (response) => {
-          this.setState({
-            url: response.domain,
-            simplifieds : (response.domainInfo && response.domainInfo.simplifieds) ? response.domainInfo.simplifieds : []
-          })
+        this.setState({
+          url: response.domain,
+          simplifieds: (response.domainInfo && response.domainInfo.simplifieds) ? response.domainInfo.simplifieds : []
+        })
       });
     this.state = {
       url: null,
@@ -38,7 +40,7 @@ class Popup extends React.Component {
       voted: type
     })
   }
-  
+
   componentDidMount() {
 
   }
@@ -48,33 +50,33 @@ class Popup extends React.Component {
     return simplifieds.map((simplifield, index) => {
       return (
         <div key={index} className="overview simplifields-description-section">
-        <div className="d-flex">
-          <div className="simplifield-container">
-            <h6 class="simplifields-description-section-title">{simplifield.name}</h6>
-          </div>
-          <div className="vote-container">
-            <VoteButton
-              type='up'
-              vote={() => this.vote('up')}
-              voted={this.state.voted}
-              style={{display: 'inline'}}
-            />
-            <VoteButton
-              type='down'
-              vote={() => this.vote('down')}
-              voted={this.state.voted}
-              style={{display: 'inline'}}
-            />
-          </div>
+          <div className="d-flex">
+            <div className="simplifield-container">
+              <h6 class="simplifields-description-section-title">{simplifield.name}</h6>
+            </div>
+            <div className="vote-container">
+              <VoteButton
+                type='up'
+                vote={() => this.vote('up')}
+                voted={this.state.voted}
+                style={{ display: 'inline' }}
+              />
+              <VoteButton
+                type='down'
+                vote={() => this.vote('down')}
+                voted={this.state.voted}
+                style={{ display: 'inline' }}
+              />
+            </div>
 
-        </div>
+          </div>
         </div>
       )
     })
   }
 
 
-  render () {
+  render() {
     return (
       <div>
         <div className="title-container">
@@ -93,6 +95,9 @@ class Popup extends React.Component {
             </div>
           )
         }
+        <div className="auth-footer">
+          <Link to="/register/">Register</Link> or <Link to="/login/">login</Link> with an existing account
+        </div>
       </div>
     )
   }
